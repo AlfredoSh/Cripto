@@ -4,11 +4,11 @@ def principal ():
     clear = lambda: os.system('cls')
     #Função Encriptar Mensagem 
     def encriptar():
-        #ler mensagem de arquivo
         clear()
         print('Encriptação de Mensagem... \n\nSelecione o método para encriptar a mensagem: ')
         print('\n1. Importar Mensagem (mensagem.txt) \n2. Digitar Mensagem \n3. Menu Inicial')
         opcao = input()
+        #ler mensagem de arquivo
         if (opcao=='1'):
             arquivo = 'mensagem.txt'
             try:
@@ -34,12 +34,7 @@ def principal ():
         if (opcao=='1'):
             key = randomKey()
         elif (opcao=='2'):
-            clear()
-            # Verificardor da Key
-            key =  str (input ("Insira uma chave:" ))   
-            while len(key)<=2:
-                print ("Chave deve ser maior a tres números.")
-                key =  str (input ("Insira uma chave:" ))
+            key = verificador() 
         elif (opcao=='3'):
             menu()
         else: 
@@ -147,13 +142,10 @@ def principal ():
             for i in numeros:
                 if (e==i):
                     indicador.append(e)
-                    print('this is indicador ', indicador)
                     key=key.replace(e,'')
         if (indicador!=[]):
           indicador="".join(indicador)
-          print('this is indicador', indicador)
           indicador=int(indicador)
-          print('this is int indicador ',indicador)
         #Conversão ASCII
         mensagemAscii = [ord(c) for c in cripto]
         keyAscii = [ord(c) for c in key]
@@ -261,14 +253,36 @@ def principal ():
             return key
         elif(tamanhoKey<3):
             print ("Chave deve ser maior a tres caracteres.")
-            return randomKey()       
+            return randomKey()      
+    def verificador():
+        key =  str (input ("Insira uma chave:" ))
+        while len(key)<=2:
+            print ("Chave deve ser maior a tres caracteres.")
+            key =  str (input ("Insira uma chave:" ))
+        i=key[0]
+        numeros = ['0','1','2','3','4','5','6','7','8','9',]
+        keyAprovada=False
+        keyAprovada2=True
+        for e in key:
+            if e!=i:
+                keyAprovada=True
+        for j in key:
+            for k in numeros:
+                if (j==k):
+                    keyAprovada2=False
+                    break    
+
+        if (keyAprovada and keyAprovada2):
+            return key
+        else:
+            print('Chave não cumpre com os criterios mínimos de segurança.')
+            verificador()
 
     # Sobre Cripto
     def info ():
         clear()
         print ('Cripto faz suas informações mais seguras, utilizando uma encriptação com uma chave simétrica. \n')
-        menuInicial
-        menu()
+        menuInicial()
     #Menu de Opções
     def menu ():
         clear()

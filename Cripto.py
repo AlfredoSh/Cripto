@@ -1,35 +1,41 @@
 def principal ():
+    barraLonga='_____________________________________________________________________________\n'
     #Método para limpar consola
     import os
     clear = lambda: os.system('cls')
     #Função Encriptar Mensagem 
     def encriptar():
         clear()
-        print('Encriptação de Mensagem... \n\nSelecione o método para encriptar a mensagem: ')
-        print('\n1. Importar Mensagem (mensagem.txt) \n2. Digitar Mensagem \n3. Menu Inicial')
+        print(barraLonga)
+        print('                       Codificar Mensagem ')
+        print(barraLonga)
+        print('\nEscolha uma opção abaixo: ')
+        print('\n1. Importar a mensagem desde um arquivo (mensagem.txt) \n2. Digitar a mensagem \n3. Menu Inicial')
         opcao = input()
         #ler mensagem de arquivo
         if (opcao=='1'):
             arquivo = 'mensagem.txt'
             try:
-                mensagem = open(arquivo, "r", errors='ignore')               
+                mensagem = open(arquivo, "r", encoding="utf-8", errors='ignore')               
                 mensagem = mensagem.read()
-                clear()
-                print("\nMesagem importada: ", mensagem)
+                print(barraLonga, 'Mensagem Encontrada: \n', mensagem, barraLonga)
             except:
-                print('Arquivo não encontrado. \n')
-                input()
-                menu()
+                print('Arquivo não encontrado. Nome do arquivo deve ser mensagem.txt \n')
+                menuInicial()
+                exit()
         elif (opcao=='2'):
-            mensagem = input("Digite a mensagen que deseja criptografar: \n")
+            print(barraLonga)
+            mensagem = input("Digite a mensagem: \n")
+            print(barraLonga)
         elif (opcao=='3'):
             menu()       
         else: 
-            print('Seleção Inválida')
+            print('Seleção Inválida. Presione ENTER para continuar')
             input()
             encriptar()
         #Inserir Chave
-        print('\n1. Para gerar Chave  \n2. Para digitar chave: \n3. Para Menu Inical')
+        print('\nEscolha uma opção abaixo para escolher a chave: \n')
+        print('\n1. Gerar a chave aleatória  \n2. Digitar a chave: \n3. Menu Inical')
         opcao = input()
         if (opcao=='1'):
             key = randomKey()
@@ -38,9 +44,10 @@ def principal ():
         elif (opcao=='3'):
             menu()
         else: 
-            print('Seleção Inválida')
+            print('Seleção Inválida. Presione ENTER para continuar')
             input()
             menu()
+        
         #Conversão ASCII
         mensagemAscii = [ord(c) for c in mensagem]
         keyAscii = [ord(c) for c in key]
@@ -48,14 +55,16 @@ def principal ():
         tamanhoKey = len(keyAscii)
         tamanhoMensagem =len(mensagemAscii)
         indicador=tamanhoKey-tamanhoMensagem
+        if (tamanhoKey==tamanhoMensagem):
+            print('Tamanho da chave é incompativel com mensagem \n')
+            menuInicial()
         #Selecção de Algoritmo de Encriptação de acordo ao tamanho
-        if (tamanhoKey>tamanhoMensagem):
+        elif (tamanhoKey>tamanhoMensagem):
             #Expandir Mensagem ao mesmo tamanho da key
             for e in mensagemAscii:
                 tamanhoMensagem=len(mensagemAscii)
                 if (tamanhoMensagem  != tamanhoKey):
                     mensagemAscii.append(e)
-            
             #Soma key & Mensagem e sustrae a media da key na Cripto
             mensagemCripto = []
             contador=0
@@ -72,14 +81,22 @@ def principal ():
             mensagemTest = [chr(x) for x in mensagemCripto]
             mensagemString = "".join(mensagemTest)
             #Salvar Arquivo
-            file = open("cripto.txt", "w",  encoding="utf-8", errors='ignore')
+            file = open("Mensagem Codificada.txt", "w",  encoding="utf-8", errors='ignore')
             file.write(mensagemString)
             file.close()
+            keyExpandida= str(indicador) + key
+            keyArquivo = open("Chave.txt", "w", errors="ignore")
+            keyArquivo.write(keyExpandida)
+            keyArquivo.close()
             clear()
-            print ("Mensagem Encriptada: ", mensagemString)
-            print('Chave com indicador', str(indicador) + key)
+            barraLonga
+            print ("Mensagem Encriptada: \n")
+            print(mensagemString)
+            print(barraLonga)
+            print('Atento a sua chave: \n', str(indicador) + key)
+            print(barraLonga)
             #print("Chave: ", key)
-            print ("\nSua mensagem foi encriptada com sucesso. Mesagem armazenada no arquivo cripto.txt. \n")
+            print ("\nSua mensagem foi codificada com sucesso. Mensagem codificada e chave armazenados no disco como arquivos. \n")
             #print('indicador',indicador)
             return menuInicial()
         else:
@@ -104,26 +121,30 @@ def principal ():
             mensagemTest = [chr(x) for x in mensagemCripto]
             mensagemString = "".join(mensagemTest)
             #Salvar Arquivo
-            file = open("cripto.txt", "w",  encoding="utf-8", errors='ignore')
+            file = open("Mensagem Codificada.txt", "w",  encoding="utf-8", errors='ignore')
             file.write(mensagemString)
             file.close()
+            keyArquivo = open("Chave.txt", "w", errors="ignore")
+            keyArquivo.write(key)
+            keyArquivo.close()
             clear()
-            print ("Mensagem Encriptada: ", mensagemString)
-            print("Chave: ", key)
-            print ("\nSua mensagem foi encriptada com sucesso. Mesagem armazenada no arquivo cripto.txt. \n")
+            print(barraLonga, 'Mensagem Codificada: ', mensagemString, '\n', barraLonga, 'Chave: ', key, '\n', barraLonga)
+            print ("Sua mensagem foi codificada com sucesso e armazenada no arquivo Mensagem Codificada.txt. \n")
             return menuInicial()
     #Função Desencriptar Mensagem
     def desencriptar (): 
         clear()
+        keyArquivo = open("Chave.txt", "r", encoding="utf-8", errors='ignore')
+        keyArquivo = keyArquivo.read()
         #Leitura da mensagem encriptada
         print('Desencriptar Mensagem... \n\nSelecione o método para encriptar a mensagem: ')
-        print('\n1. Importar Criptografia (cripto.txt) \n2. Digitar Cripto \n3. Menu Inical')
+        print('\n1. Importar Mensagem Codificada (Mensagem Codificada.txt) \n2. Digitar Cripto \n3. Menu Inical')
         opcao = input()
         if (opcao=='1'):
             clear()
-            cripto = open("cripto.txt", "r", encoding="utf-8", errors='ignore')
+            cripto = open("Mensagem Codificada.txt", "r", encoding="utf-8", errors='ignore')
             cripto = cripto.read()
-            print("Mesagem importada: ", cripto)
+            print("Mesagem importada:\n\n", cripto)
             key =  input ("Insira a respectiva chave: \n")
         elif (opcao=='2'):
             clear()
@@ -176,15 +197,16 @@ def principal ():
                 mensagemTest = [chr(x) for x in mensagemCripto]
                 mensagemDesencriptada = "".join(mensagemTest)
                 #save the file
-                file = open("decripto.txt", "w", errors="ignore")
+                file = open("Mensagem Decodificada.txt", "w", errors="ignore")
                 file.write(mensagemDesencriptada)
                 file.close()
             # clear()
-                print (f"Mensagem Desencriptada: {mensagemDesencriptada}\n ")
-                print ("Confira sua mensagem desencriptada:. \nMesagem armazenada no arquivo decripto.txt \n")
+                print(barraLonga, 'Mensagem Decodificada:\n\n', mensagemDesencriptada, '\n', barraLonga)     
+                print ("Confira sua mensagem decodificada!. Mensagem aramazenada no arquivo Mensagem Decodificada.txt \n")
+                menuInicial()
             except:
-                print('Chave não corresponde.  \n')
-                return menuInicial()
+                print('Chave é incompátivel.  \n')
+                menu()
         else:
             #criar key do mesmo tamanho da mensagem
             for e in keyAscii:
@@ -210,15 +232,16 @@ def principal ():
                 mensagemTest = [chr(x) for x in mensagemCripto]
                 mensagemDesencriptada = "".join(mensagemTest)
                 #save the file
-                file = open("decripto.txt", "w", errors="ignore")
+                file = open("Mensagem Decodificada.txt", "w", errors="ignore")
                 file.write(mensagemDesencriptada)
                 file.close()
-            # clear()
-                print (f"Mensagem Desencriptada: {mensagemDesencriptada}\n ")
-                print ("Sua mensagem foi desencriptada com sucesso. \nMesagem armazenada no arquivo decripto.txt \n")
+                print(barraLonga, 'Mensagem Decodificada:\n\n', mensagemDesencriptada, '\n', barraLonga)     
+                print ("Confira sua mensagem decodificada!. Mensagem aramazenada no arquivo Mensagem Decodificada.txt \n")
+                menuInicial()
             except:
                 print('Chave não corresponde.  \n')
                 return menuInicial()
+        
     #Voltar ao Menu
     def menuInicial():
         print('Voltar ao menú incial S/N:')
@@ -253,7 +276,7 @@ def principal ():
             return key
         elif(tamanhoKey<3):
             print ("Chave deve ser maior a tres caracteres.")
-            return randomKey()      
+            return randomKey()     
     def verificador():
         key =  str (input ("Insira uma chave:" ))
         while len(key)<=2:
@@ -276,12 +299,16 @@ def principal ():
             return key
         else:
             print('Chave não cumpre com os criterios mínimos de segurança.')
-            verificador()
+            return verificador()
 
     # Sobre Cripto
     def info ():
         clear()
-        print ('Cripto faz suas informações mais seguras, utilizando uma encriptação com uma chave simétrica. \n')
+        print(barraLonga)
+        print('Atividades Praticas Supervisionadas | Universidade Paulista \n')
+        print ('\nCripto codifica e decodifica mensagems com foco na segurança da informação.')
+        print('O nivel de segurança é proporcional ao tamanho da respectiva chave. \n')
+        print(barraLonga)
         menuInicial()
     #Menu de Opções
     def menu ():
@@ -290,20 +317,23 @@ def principal ():
         " .d8888b           d8b          888                \n"   
         "d88P  Y88b         Y8P          888                \n"  
         "888    888         888          888                \n"  
-        "888        888d888 888 88888b.  888888  .d88b.     \n" 
+        "888        888d888 888 88888b   888888   d88b      \n" 
         "888        888P    888 888  88b 888    d88  88b    \n"
         "888    888 888     888 888  888 888    888  888    \n"
-        "Y88b  d88P 888     888 888 d88P Y88b.  Y88..88P    \n"
+        "Y88b  d88P 888     888 888 d88P Y88b   Y88  88P    \n"
         "  Y8888P   888     888 88888P   Y888     Y88P"  "  \n"
         "                       888                         \n"
         "                       888                         \n"
         "                       888                         \n"                   
-        "\n")
-        print("Escolha uma das opções abaixo: \n")
-        print("1. Encriptar Mensagem.")
-        print("2. Desencriptar Mensagem.")
-        print("3. Sobre Cripto.")
-        print("4. Sair.")    
+        "")
+        print('______________________________________________\n')
+        print('Codifica e decodifica uma mensagem com Cripto |       ')
+        print('______________________________________________\n')
+        print('Escolha uma das opções abaixo: \n ')
+        print("1. Codificar Mensagem")
+        print("2. Decodificar Mensagem")
+        print("3. Sobre Cripto")
+        print("4. Sair")    
         opcao = input()
         if (opcao=="1"):
             encriptar()
@@ -316,6 +346,8 @@ def principal ():
             input()
             exit()
         else:
+            print('Seleção Inválida. Presione ENTER para continuar')
+            input()
             menu()
     menu()
 principal()

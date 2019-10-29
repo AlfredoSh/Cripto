@@ -1,3 +1,4 @@
+
 def principal ():
     #Método para limpar consola
     import os
@@ -30,7 +31,7 @@ def principal ():
         print(f'{criptoLogo}  {barraLonga}                 Codificar Mensagem {barraLonga}')
         print('Escolha uma opção abaixo:\n \n1. Importar a mensagem desde um arquivo (mensagem.txt) \n2. Digitar a mensagem \n3. Menu Inicial')
         opcao = input()
-        #ler mensagem de arquivo
+        #Ler mensagem de arquivo
         if (opcao=='1'):
             arquivo = 'mensagem.txt'
             try:
@@ -69,7 +70,6 @@ def principal ():
         #Conversão ASCII
         mensagemAscii = [ord(c) for c in mensagem]
         keyAscii = [ord(c) for c in key]
-        #Adicionar Indicador na primera posicao
         tamanhoKey = len(keyAscii)
         tamanhoMensagem =len(mensagemAscii)
         indicador=tamanhoKey-tamanhoMensagem
@@ -108,11 +108,9 @@ def principal ():
             keyArquivo.close()
             clear() 
             print (f" {criptoLogo} {barraLonga}Mensagem Codificada: \n {mensagemString} {barraLonga}")
-            print('Atento a sua chave: \n', str(indicador) + key, barraLonga)
-            #print("Chave: ", key)
-            print (f"{criptoLogo}Sua   mensagem foi codificada com sucesso. Mensagem codificada e chave armazenados no disco como arquivos. \n")
-            enviarEmail(mensagem, mensagemString,key,nome,email,assunto)
-            #print('indicador',indicador)
+            print(f'Atento a sua chave: {keyExpandida} {barraLonga}')
+            print (f"{criptoLogo}Sua mensagem foi codificada com sucesso. Mensagem codificada e chave armazenados no disco como arquivos. \n")
+            enviarEmail(mensagem, mensagemString,keyExpandida,nome,email,assunto)
             return menuInicial()
         else:
             #Expandir Key ao mesmo tamanho da mensagem
@@ -173,9 +171,10 @@ def principal ():
             print('Seleção Inválida')
             input()
             desencriptar()
-        #Indicador
+        #Ler e retirar indicador
         numeros = ['0','1','2','3','4','5','6','7','8','9',]
         indicador=[]
+        keyExpandida=key
         for e in key:
             for i in numeros:
                 if (e==i):
@@ -190,7 +189,6 @@ def principal ():
         tamanhoKey = len(keyAscii)
         tamanhoMensagem =len(mensagemAscii)
         if (tamanhoKey==tamanhoMensagem):
-            #criar mensagem do mesmo tamanho da key
             for e in mensagemAscii:
                 tamanhoMensagem=len(mensagemAscii)
                 if (tamanhoMensagem  != tamanhoKey):
@@ -198,7 +196,6 @@ def principal ():
             #Somar key e mensagem
             mensagemCripto = []
             contador=0
-            #Calcular media
             soma = 0
             for e in keyAscii:
                 soma = soma + e
@@ -209,7 +206,7 @@ def principal ():
                 soma=soma+media
                 mensagemCripto.append(soma)
                 contador = contador + 1
-            #Adicionar a cada elemento da mensagem assci e restar
+            #Adicionar a cada elemento da mensagem ASCII
             try:
                 mensagemTest = [chr(x) for x in mensagemCripto]
                 mensagemDesencriptada = "".join(mensagemTest)
@@ -220,7 +217,7 @@ def principal ():
                 clear()
                 print(f'{criptoLogo}{barraLonga} Mensagem Deodificada:  {mensagemDesencriptada} {barraLonga}')          
                 print ("Confira sua mensagem decodificada!. Mensagem aramazenada no arquivo Mensagem Decodificada.txt \n")
-                enviarEmail(cripto, mensagemDesencriptada,key,nome,email,assunto)
+                enviarEmail(cripto, mensagemDesencriptada,keyExpandida,nome,email,assunto)
                 menuInicial()
             except:
                 print('Chave é incompátivel.  \n')
@@ -231,10 +228,8 @@ def principal ():
                 tamanhoKey=len(keyAscii)
                 if (tamanhoMensagem  != tamanhoKey):
                     keyAscii.append(e)
-            #Somar key e mensagem
             mensagemCripto = []
             contador=0
-            #Calcular media
             soma = 0
             for e in keyAscii:
                 soma = soma + e
@@ -245,7 +240,7 @@ def principal ():
                 soma=soma+media
                 mensagemCripto.append(soma)
                 contador = contador + 1
-            #Adicionar a cada elemento da mensagem assci e restar
+            #Adicionar a cada elemento da mensagem ASCII
             try:
                 mensagemTest = [chr(x) for x in mensagemCripto]
                 mensagemDesencriptada = "".join(mensagemTest)
@@ -262,7 +257,7 @@ def principal ():
                 print('Chave não corresponde.  \n')
                 return menuInicial()
         
-    #Voltar ao Menu
+    #Função Voltar ao Menú Inicial
     def menuInicial():
         print('Voltar ao menú incial S/N:')
         opcao = input()
@@ -275,7 +270,7 @@ def principal ():
             input()
         else:
             menu()
-    #Generado de Chave aleatoria
+    #Função gerador de chave aleatória
     def randomKey():
         import random    
         list = []
@@ -296,7 +291,8 @@ def principal ():
             return key
         elif(tamanhoKey<3 or tamanhoKey>32):
             print ("Tamanho da chave incompátivel.")
-            return randomKey()     
+            return randomKey()
+    #Função verificadora de segurança mínima           
     def verificador():
         key =  str (input ("Insira uma chave:" ))
         while len(key)<=2:
@@ -314,7 +310,6 @@ def principal ():
                 if (j==k):
                     keyAprovada2=False
                     break    
-
         if (keyAprovada and keyAprovada2):
             return key
         else:
@@ -322,19 +317,21 @@ def principal ():
             print('1. A chave não pode ter todos os caracteres iguais \n2. A chave não pode ter números\n')
             return verificador()
 
-    # Sobre Cripto
+    #Função de Informações Cripto
     def info ():
         clear()
         print(f'{criptoLogo} \n {barraLonga} Atividades Praticas Supervisionadas | Universidade Paulista \n')
         print ('\nCripto codifica e decodifica mensagems com foco na segurança da informação.')
-        print('O nivel de segurança é proporcional ao tamanho da respectiva chave.', barraLonga)
+        print('O nivel de segurança é proporcional ao tamanho da respectiva chave.')
+        print('Mais Informações: https://github.com/AlfredoSh/Cripto ', barraLonga)
         menuInicial()
+    #Função Enviar E-mail
     def enviarEmail(mensagem, mensagemString,key, nome,email,assunto):
         try:
             import smtplib, ssl
             from email.mime.text import MIMEText as text
             assunto
-            port = 587  # For starttls
+            port = 587  
             smtp_server = "smtp.gmail.com"
             sender_email = "cripto.projectunip@gmail.com"
             receiver_email = email
@@ -365,10 +362,10 @@ def principal ():
                 server.login(sender_email, password)
                 server.sendmail(sender_email, receiver_email, message.encode('utf8'))
                 message.encode("utf8") 
-            print('Informações enviadas!')
+            print('Informações enviadas com sucesso')
         except:
             print('Informações não enviadas!')
-    #Menu de Opções
+    #Função Menú Principal
     def menu ():
         clear()
         print(criptoLogo)

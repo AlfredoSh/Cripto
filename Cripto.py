@@ -1,7 +1,6 @@
-
 def principal ():
     #Método para limpar consola
-    import os
+    import os,time,sys
     clear = lambda: os.system('cls')
     barraLonga='\n________________________________________________________\n'
     criptoLogo = ("""
@@ -17,13 +16,19 @@ def principal ():
                                 888                         
                                 888
         \n""")
-    print(criptoLogo)
-    print( 'Qual seu nome?')
-    nome=input()
+   
+    for l in criptoLogo:
+      sys.stdout.write(l)
+      sys.stdout.flush()
+      time.sleep(0.001)
+    nome=input('\nVamos começar com o seu nome?\n')
     clear()
-    print(f'{criptoLogo}\n{nome}, Qual seu e-mail?')
-    email=input()
+    email=input(f'{criptoLogo}\n{nome}, qual seu e-mail?\n')
     clear()
+    print(criptoLogo, 'Ótimo! Pressione ENTER para codificar ou decodificar uma mensagem')
+    input()
+    clear()
+
     #Função Encriptar Mensagem 
     def encriptar():        
         clear()
@@ -110,7 +115,7 @@ def principal ():
             print (f" {criptoLogo} {barraLonga}Mensagem Codificada: \n {mensagemString} {barraLonga}")
             print(f'Atento a sua chave: {keyExpandida} {barraLonga}')
             print (f"{criptoLogo}Sua mensagem foi codificada com sucesso. Mensagem codificada e chave armazenados no disco como arquivos. \n")
-            enviarEmail(mensagem, mensagemString,keyExpandida,nome,email,assunto)
+            enviarEmail(mensagemString,keyExpandida,nome,email,assunto)
             return menuInicial()
         else:
             #Expandir Key ao mesmo tamanho da mensagem
@@ -143,24 +148,28 @@ def principal ():
             clear()
             print (f"{criptoLogo} Sua mensagem foi codificada com sucesso e armazenada no arquivo Mensagem Codificada.txt. \n")
             print(f' {barraLonga} Mensagem Codificada:  {mensagemString} {barraLonga} Chave: {key} {barraLonga}')
-            enviarEmail(mensagem, mensagemString,key,nome,email,assunto)
+            enviarEmail(mensagemString,key,nome,email,assunto)
             return menuInicial()
     #Função Desencriptar Mensagem
     def desencriptar ():
         assunto=  'Decodificada'
         clear()
-        keyArquivo = open("Chave.txt", "r", encoding="utf-8", errors='ignore')
-        keyArquivo = keyArquivo.read()
         #Leitura da mensagem encriptada
         print(f'{criptoLogo} \n {barraLonga}                Decodificar Mensagem\n {barraLonga}')
         print('\n1. Importar Mensagem Codificada (Mensagem Codificada.txt) \n2. Digitar mensagem Codificada \n3. Menu Inical')
         opcao = input()
         if (opcao=='1'):
             clear()
-            cripto = open("Mensagem Codificada.txt", "r", encoding="utf-8", errors='ignore')
-            cripto = cripto.read()
-            print(f'{criptoLogo} {barraLonga} Mensagem importada: {cripto} {barraLonga}')
-            key =  input ("Insira a respectiva chave: \n")
+            try:
+              cripto = open("Mensagem Codificada.txt", "r", encoding="utf-8", errors='ignore')
+              cripto = cripto.read()
+              print(f'{criptoLogo} {barraLonga} Mensagem importada: {cripto} {barraLonga}')
+              key =  input ("Insira a respectiva chave: \n")
+            except:
+              print('Arquivo não encontrado')
+              input()
+              desencriptar()
+              exit()
         elif (opcao=='2'):
             clear()
             cripto = input("Digite o Cripto: \n")
@@ -217,7 +226,7 @@ def principal ():
                 clear()
                 print(f'{criptoLogo}{barraLonga} Mensagem Deodificada:  {mensagemDesencriptada} {barraLonga}')          
                 print ("Confira sua mensagem decodificada!. Mensagem aramazenada no arquivo Mensagem Decodificada.txt \n")
-                enviarEmail(cripto, mensagemDesencriptada,keyExpandida,nome,email,assunto)
+                enviarEmail(mensagemDesencriptada,keyExpandida,nome,email,assunto)
                 menuInicial()
             except:
                 print('Chave é incompátivel.  \n')
@@ -251,7 +260,7 @@ def principal ():
                 clear()
                 print(f'{criptoLogo} {barraLonga} Mensagem Deodificada:  {mensagemDesencriptada} {barraLonga}')          
                 print ("Confira sua mensagem decodificada!. Mensagem aramazenada no arquivo Mensagem Decodificada.txt \n")
-                enviarEmail(cripto, mensagemDesencriptada,key,nome,email,assunto)
+                enviarEmail(mensagemDesencriptada,key,nome,email,assunto)
                 menuInicial()
             except:
                 print('Chave não corresponde.  \n')
@@ -326,7 +335,7 @@ def principal ():
         print('Mais Informações: https://github.com/AlfredoSh/Cripto ', barraLonga)
         menuInicial()
     #Função Enviar E-mail
-    def enviarEmail(mensagem, mensagemString,key, nome,email,assunto):
+    def enviarEmail(mensagemString,key, nome,email,assunto):
         try:
             import smtplib, ssl
             from email.mime.text import MIMEText as text
@@ -337,20 +346,19 @@ def principal ():
             receiver_email = email
             print('Enviando informações a ', email)
             password = 'criptoproject'
-            message = f"""Subject: Parabens! Mensagem {assunto}
+            message = f"""Subject:  Mensagem {assunto} - Cripto
 
             Olá {nome},
 
-            Sua mensagem foi {assunto} com sucesso:
+            Parabéns! Sua mensagem foi {assunto} com sucesso:
 
-            Mensagem Original:   {mensagem}
-            Mensagem {assunto}: {mensagemString}
+            Mensagem {assunto}: {mensagemString}			
             Chave: {key}
 
 
             Abraços,
 
-            A equipe de Cripto
+            Equipe Cripto
             https://github.com/AlfredoSh/Cripto
 
             """
@@ -369,9 +377,9 @@ def principal ():
     def menu ():
         clear()
         print(criptoLogo)
-        print(barraLonga, 'Codifica e decodifica uma mensagem com Cripto', barraLonga)
+        print(barraLonga, '       Codifica ou decodifica uma mensagem', barraLonga)
         print('Escolha uma das opções abaixo: \n ')
-        print("1. Codificar Mensagem \n2. Decodificar Mensagem \n3. Sobre Cripto \n4. Sair")    
+        print("1. Codificar \n2. Decodificar \n3. Informações\n4. Sair")    
         opcao = input()
         if (opcao=="1"):
             encriptar()

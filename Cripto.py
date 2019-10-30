@@ -20,7 +20,7 @@ def principal ():
     for l in criptoLogo:
       sys.stdout.write(l)
       sys.stdout.flush()
-      time.sleep(0)
+      time.sleep(0.001)
     nome=input('\nVamos começar com o seu nome?\n')
     clear()
     email=input(f'{criptoLogo}\n{nome}, qual seu e-mail?\n')

@@ -20,7 +20,7 @@ def principal ():
     for l in criptoLogo:
       sys.stdout.write(l)
       sys.stdout.flush()
-      time.sleep(0.001)
+      time.sleep(0)
     nome=input('\nVamos começar com o seu nome?\n')
     clear()
     email=input(f'{criptoLogo}\n{nome}, qual seu e-mail?\n')
@@ -340,6 +340,10 @@ def principal ():
             import smtplib, ssl
             from email.mime.text import MIMEText as text
             assunto
+            Chave="Chave" + ":"
+            if assunto=='Decodificada':
+                Chave=''
+                key=''
             port = 587  
             smtp_server = "smtp.gmail.com"
             sender_email = "cripto.projectunip@gmail.com"
@@ -353,7 +357,7 @@ def principal ():
             Parabéns! Sua mensagem foi {assunto} com sucesso:
 
             Mensagem {assunto}: {mensagemString}			
-            Chave: {key}
+            {Chave}{key}
 
 
             Abraços,
